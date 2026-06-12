@@ -6,7 +6,7 @@
 - 不打针、不动刀、无恢复期
 - 按脸型困扰引导查看相似真实案例
 - 多处 WhatsApp 联系入口
-- 8 秒后弹出 WhatsApp 案例咨询弹窗
+- 用户进页约 20 秒后自动跳转 WhatsApp
 
 ## 上线前建议先改
 
@@ -16,12 +16,20 @@
 window.LP_CONFIG = {
   WHATSAPP_NUMBER: "60106519843",
   PREFILL_MESSAGE: "你好，我想咨询新加坡韩式面部骨雕。可以发我真实案例，并帮我判断我的脸型适不适合做吗？",
-  POPUP_DELAY: 8000,
-  AUTO_REDIRECT: false
+  AUTO_REDIRECT_DELAY: 20000,
+  AUTO_REDIRECT: true,
+  ENABLE_MODAL: false
 };
 ```
 
 `PREFILL_MESSAGE` 就是 WhatsApp 默认打招呼文案。页面里部分按钮有独立的 `data-wa-message`，会根据用户点击的案例类型自动带不同开场。
+
+自动跳转逻辑说明：
+
+- `AUTO_REDIRECT_DELAY: 20000`：进页 20 秒后自动跳转 WhatsApp。
+- `AUTO_REDIRECT: true`：开启自动跳转。
+- `ENABLE_MODAL: false`：不再弹出咨询窗，不打断客户选择。
+- 页面上的 WhatsApp 按钮仍保留，客户如果 20 秒前就有兴趣，可以主动点击。
 
 ## 真实案例图片
 

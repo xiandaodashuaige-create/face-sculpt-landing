@@ -15,15 +15,17 @@
   上线前只改这里：
   WHATSAPP_NUMBER: 国际格式，去掉 +、空格和横线
   PREFILL_MESSAGE: WhatsApp 默认打招呼文案
-  POPUP_DELAY: 进页多少毫秒后弹咨询窗
-  AUTO_REDIRECT: false=弹窗引导，true=自动跳转。不建议开启自动跳转。
+  AUTO_REDIRECT_DELAY: 进页多少毫秒后自动跳转 WhatsApp
+  AUTO_REDIRECT: true=自动跳转 WhatsApp，false=不自动跳转
+  ENABLE_MODAL: true=使用弹窗，false=不使用弹窗
 -->
 <script>
   window.LP_CONFIG = {
     WHATSAPP_NUMBER: "60106519843",
     PREFILL_MESSAGE: "你好，我想咨询新加坡韩式面部骨雕。可以发我真实案例，并帮我判断我的脸型适不适合做吗？",
-    POPUP_DELAY: 8000,
-    AUTO_REDIRECT: false
+    AUTO_REDIRECT_DELAY: 20000,
+    AUTO_REDIRECT: true,
+    ENABLE_MODAL: false
   };
 </script>
 
@@ -1090,14 +1092,16 @@ fbq('track', 'PageView');
   var modalLater = document.getElementById("modalLater");
   var fired = false;
   function closeModal(){ modal.classList.remove("open"); }
+  function goToWhatsApp(message, label){
+    if (fired) return;
+    fired = true;
+    trackContact(label || "Auto WhatsApp Redirect");
+    window.location.href = buildWaUrl(message || defaultMessage);
+  }
   function triggerModal(){
     if (fired) return;
     fired = true;
-    if (cfg.AUTO_REDIRECT) {
-      window.location.href = buildWaUrl(defaultMessage);
-    } else {
-      modal.classList.add("open");
-    }
+    modal.classList.add("open");
   }
   modalClose.addEventListener("click", closeModal);
   modalLater.addEventListener("click", closeModal);
@@ -1107,10 +1111,13 @@ fbq('track', 'PageView');
   document.addEventListener("keydown", function(e){
     if (e.key === "Escape") closeModal();
   });
-  window.setTimeout(triggerModal, cfg.POPUP_DELAY || 8000);
-  document.addEventListener("mouseleave", function(e){
-    if (e.clientY <= 0) triggerModal();
-  });
+  if (cfg.AUTO_REDIRECT) {
+    window.setTimeout(function(){
+      goToWhatsApp(defaultMessage, "Auto WhatsApp Redirect");
+    }, cfg.AUTO_REDIRECT_DELAY || 20000);
+  } else if (cfg.ENABLE_MODAL) {
+    window.setTimeout(triggerModal, cfg.POPUP_DELAY || 25000);
+  }
 })();
 </script>
 </body>
