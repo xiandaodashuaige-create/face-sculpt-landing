@@ -1056,16 +1056,52 @@ src="https://www.facebook.com/tr?id=986266751045210&ev=PageView&noscript=1"
   function buildWaUrl(message){
     return "https://wa.me/" + cfg.WHATSAPP_NUMBER + "?text=" + encodeURIComponent(message || defaultMessage);
   }
-  function trackContact(label){
-    if (typeof window !== "undefined" && typeof window.fbq === "function") {
-      window.fbq("track", "Contact", label ? { content_name: label } : undefined);
+  function getCookie(name){
+    var match = document.cookie.match(new RegExp("(?:^|; )" + name.replace(/([.$?*|{}()\[\]\\\/\+^])/g, "\\$1") + "=([^;]*)"));
+    return match ? decodeURIComponent(match[1]) : "";
+  }
+  function getFbc(){
+    var storedFbc = getCookie("_fbc");
+    if (storedFbc) return storedFbc;
+    var fbclid = new URLSearchParams(window.location.search).get("fbclid");
+    return fbclid ? "fb.1." + Math.floor(Date.now() / 1000) + "." + fbclid : "";
+  }
+  function createEventId(){
+    if (window.crypto && window.crypto.randomUUID) {
+      return "contact_" + window.crypto.randomUUID();
     }
+    return "contact_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+  }
+  function trackContact(label, eventId){
+    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+      window.fbq("track", "Contact", label ? { content_name: label } : {}, { eventID: eventId });
+    }
+  }
+  function sendCapiContact(label, eventId){
+    if (!window.fetch || !eventId) return;
+    var payload = {
+      event_id: eventId,
+      content_name: label || "WhatsApp Contact",
+      event_source_url: window.location.href,
+      client_user_agent: navigator.userAgent,
+      fbp: getCookie("_fbp"),
+      fbc: getFbc()
+    };
+    window.fetch("/api/meta-capi", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(function(){});
   }
   document.querySelectorAll(".js-wa").forEach(function(el){
     el.addEventListener("click", function(e){
       e.preventDefault();
       var message = el.getAttribute("data-wa-message") || defaultMessage;
-      trackContact((el.textContent || "").trim());
+      var label = (el.textContent || "").trim() || "WhatsApp Contact";
+      var eventId = createEventId();
+      trackContact(label, eventId);
+      sendCapiContact(label, eventId);
       window.open(buildWaUrl(message), "_blank", "noopener");
     });
   });

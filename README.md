@@ -70,7 +70,45 @@ assets/
 fbq("track", "Contact")
 ```
 
-60 秒自动跳转 WhatsApp 不触发 `Contact`，避免广告后台把自动跳转误算成真实联系。
+同时，手动点击 WhatsApp 按钮也会调用 Vercel 服务端接口：
+
+```text
+/api/meta-capi
+```
+
+这个接口会通过 Meta Conversions API 再发送同一个 `Contact`。浏览器 Pixel 和服务端 CAPI 会使用同一个 `event_id`，让 Meta 自动去重，避免一个点击被算成两次。
+
+60 秒自动跳转 WhatsApp 不触发 `Contact`，也不调用 CAPI，避免广告后台把自动跳转误算成真实联系。
+
+## Vercel 环境变量
+
+Conversions API 需要在 Vercel 里设置：
+
+```text
+META_CAPI_TOKEN
+META_DATASET_ID
+```
+
+你已经加过这两个变量的话，保留即可。  
+可选测试变量：
+
+```text
+META_TEST_EVENT_CODE
+```
+
+如果你在 Meta「测试事件」里拿到了 Test Event Code，可以临时加这个变量，重新部署后测试服务端事件。测试结束后可以删除。
+
+注意：`META_CAPI_TOKEN` 是敏感信息，只能放在 Vercel 环境变量里，不要写进 `index.html`。
+
+## 去重版 CAPI 测试方式
+
+部署后进入 Meta「测试事件」：
+
+1. 打开网站，确认出现 `PageView`。
+2. 手动点击任意 WhatsApp 按钮。
+3. 正常情况下会看到 `Contact`，来源可能显示 Browser + Server。
+4. 如果 Meta 显示去重成功，说明 `event_id` 匹配正常。
+5. 等 60 秒自动跳 WhatsApp，不应该新增 `Contact`。
 
 ## 部署
 
