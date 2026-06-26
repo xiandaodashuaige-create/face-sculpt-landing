@@ -23,12 +23,13 @@
   window.LP_CONFIG = {
     WHATSAPP_NUMBER: "60106519843",
     PREFILL_MESSAGE: "你好，我想咨询新加坡韩式面部骨雕。可以发我真实案例，并帮我判断我的脸型适不适合做吗？",
-    AUTO_REDIRECT_DELAY: 20000,
+    AUTO_REDIRECT_DELAY: 60000,
     AUTO_REDIRECT: true,
     ENABLE_MODAL: false
   };
 </script>
- <!-- Meta Pixel Code -->
+
+<!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -40,63 +41,11 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '986266751045210');
 fbq('track', 'PageView');
-
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=986266751045210&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
-
-  <!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '881537367835351');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=881537367835351&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-  <!-- Meta Pixel Code -->
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', '1673979390493544');
-fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=1673979390493544&ev=PageView&noscript=1"
-/></noscript>
-<!-- End Meta Pixel Code -->
-
-<!-- META PIXEL: 替换 PIXEL_ID
-<script>
-!function(f,b,e,v,n,t,s)
-{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
-'https://connect.facebook.net/en_US/fbevents.js');
-fbq('init', 'PIXEL_ID');
-fbq('track', 'PageView');
-</script>
--->
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1146,10 +1095,9 @@ fbq('track', 'PageView');
   var modalLater = document.getElementById("modalLater");
   var fired = false;
   function closeModal(){ modal.classList.remove("open"); }
-  function goToWhatsApp(message, label){
+  function goToWhatsApp(message){
     if (fired) return;
     fired = true;
-    trackContact(label || "Auto WhatsApp Redirect");
     window.location.href = buildWaUrl(message || defaultMessage);
   }
   function triggerModal(){
@@ -1167,8 +1115,8 @@ fbq('track', 'PageView');
   });
   if (cfg.AUTO_REDIRECT) {
     window.setTimeout(function(){
-      goToWhatsApp(defaultMessage, "Auto WhatsApp Redirect");
-    }, cfg.AUTO_REDIRECT_DELAY || 20000);
+      goToWhatsApp(defaultMessage);
+    }, cfg.AUTO_REDIRECT_DELAY || 60000);
   } else if (cfg.ENABLE_MODAL) {
     window.setTimeout(triggerModal, cfg.POPUP_DELAY || 25000);
   }

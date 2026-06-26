@@ -6,7 +6,7 @@
 - 不打针、不动刀、无恢复期
 - 按脸型困扰引导查看相似真实案例
 - 多处 WhatsApp 联系入口
-- 用户进页约 20 秒后自动跳转 WhatsApp
+- 用户进页约 60 秒后自动跳转 WhatsApp
 
 ## 上线前建议先改
 
@@ -16,7 +16,7 @@
 window.LP_CONFIG = {
   WHATSAPP_NUMBER: "60106519843",
   PREFILL_MESSAGE: "你好，我想咨询新加坡韩式面部骨雕。可以发我真实案例，并帮我判断我的脸型适不适合做吗？",
-  AUTO_REDIRECT_DELAY: 20000,
+  AUTO_REDIRECT_DELAY: 60000,
   AUTO_REDIRECT: true,
   ENABLE_MODAL: false
 };
@@ -26,10 +26,10 @@ window.LP_CONFIG = {
 
 自动跳转逻辑说明：
 
-- `AUTO_REDIRECT_DELAY: 20000`：进页 20 秒后自动跳转 WhatsApp。
+- `AUTO_REDIRECT_DELAY: 60000`：进页 60 秒后自动跳转 WhatsApp。
 - `AUTO_REDIRECT: true`：开启自动跳转。
 - `ENABLE_MODAL: false`：不再弹出咨询窗，不打断客户选择。
-- 页面上的 WhatsApp 按钮仍保留，客户如果 20 秒前就有兴趣，可以主动点击。
+- 页面上的 WhatsApp 按钮仍保留，客户如果 60 秒前就有兴趣，可以主动点击。
 
 ## 真实案例图片
 
@@ -58,17 +58,19 @@ assets/
 
 ## Meta Pixel
 
-`index.html` 里已预留 Pixel 代码位：
+`index.html` 里已安装当前广告数据集 Pixel：
 
-```html
-<!-- META PIXEL: 替换 PIXEL_ID -->
+``` 
+986266751045210
 ```
 
-把 `PIXEL_ID` 换成你的 Meta Pixel ID 后，每次点击 WhatsApp 按钮都会触发：
+每次客户手动点击 WhatsApp 按钮都会触发：
 
 ```js
 fbq("track", "Contact")
 ```
+
+60 秒自动跳转 WhatsApp 不触发 `Contact`，避免广告后台把自动跳转误算成真实联系。
 
 ## 部署
 
